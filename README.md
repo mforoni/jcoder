@@ -1,3 +1,6 @@
+[![build_status](https://travis-ci.org/mforoni/jcoder.svg?branch=master)](https://travis-ci.org/mforoni/jcoder)
+[![Release](https://jitpack.io/v/com.github.mforoni/jcoder.svg)](https://jitpack.io/#com.github.mforoni/jcoder)
+
 # JCoder
 
 Provides useful APIs for the automatic generation of Java source code, i.e. it allows to create JavaBeans and immutable classes starting from CSV files and spreadsheets.
