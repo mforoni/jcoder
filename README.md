@@ -35,7 +35,7 @@ it can easily be overcome just by following these two steps:
 
 ```xml
 <dependency>
-  <groupId>com.github.mforoni</groupId>
+  <groupId>com.github.mforoni.jcoder</groupId>
   <artifactId>jcoder</artifactId>
   <version>master-SNAPSHOT</version>
 </dependency>
@@ -52,7 +52,7 @@ allprojects {
 }
 
 dependencies {
-  implementation 'com.github.mforoni:jcoder:master-SNAPSHOT'
+  implementation 'com.github.mforoni.jcoder:jcoder:master-SNAPSHOT'
 }
 ```
 

@@ -10,7 +10,6 @@
   </parent>
 
   <artifactId>jcoder-demo</artifactId>
-  <packaging>jar</packaging>
 
   <name>jcoder-demo</name>
   <description></description>
