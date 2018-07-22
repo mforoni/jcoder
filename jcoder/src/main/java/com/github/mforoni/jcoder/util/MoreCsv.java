@@ -24,6 +24,8 @@ import com.github.mforoni.jbasic.JStrings;
 import com.github.mforoni.jbasic.io.JFiles;
 import com.github.mforoni.jcoder.JClass;
 import com.github.mforoni.jcoder.JHeader;
+import com.github.mforoni.jcoder.Names;
+import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 
 /**
@@ -35,14 +37,15 @@ import com.google.common.base.Function;
  * @see JHeader
  * @see JClass
  */
+@Beta
 public final class MoreCsv {
   private MoreCsv() {
     throw new AssertionError();
   }
 
-  public static JHeader inferHeader(final String csvResourceName)
+  public static JHeader inferHeader(final String resource)
       throws FileNotFoundException, IOException {
-    return inferHeader(new CsvReader(JFiles.fromResource(csvResourceName)));
+    return inferHeader(new CsvReader.Builder(resource).build());
   }
 
   public static JHeader inferHeader(final File csv) throws FileNotFoundException, IOException {
@@ -51,23 +54,27 @@ public final class MoreCsv {
 
   public static JHeader inferHeader(final CsvReader csvReader)
       throws FileNotFoundException, IOException {
-    final Parser.Strings headerBuilder = new Parser.Strings(csvReader.getCsv().getName());
+    final Parser.Strings parser = new Parser.Strings(csvReader.getCsv().getName());
     try (final FileInputStream fis = new FileInputStream(csvReader.getCsv()); //
-        BufferedReader br = new BufferedReader(new InputStreamReader(fis))) {
+        final BufferedReader br = new BufferedReader(new InputStreamReader(fis))) {
       String line;
-      int row = 0;
+      int row = 1;
       while ((line = br.readLine()) != null && row < csvReader.getRowLimit()) {
         final String[] values = JStrings.splitEscapingQuoted(line, csvReader.getSeparator());
-        headerBuilder.computeRow(values, row);
+        if (csvReader.isHeader() && row == 1) {
+          parser.header(values);
+        } else {
+          parser.values(values, row);
+        }
         row++;
       }
     }
-    return headerBuilder.buildHeader();
+    return parser.buildHeader();
   }
 
-  public static List<CSVRecord> parse(final String csvResourceName, final String[] header)
+  public static List<CSVRecord> parse(final String resource, final String[] header)
       throws IOException {
-    return parse(JFiles.fromResource(csvResourceName), header);
+    return parse(JFiles.fromResource(resource), header);
   }
 
   public static List<CSVRecord> parse(final File csv, final String[] header) throws IOException {
@@ -79,22 +86,26 @@ public final class MoreCsv {
   }
 
   @Nonnull
-  public static <T> List<T> parse(final String csvResourceName, final Class<T> classType,
-      final CellProcessor[] cellProcessors) throws IOException {
-    return parse(JFiles.fromResource(csvResourceName), classType, cellProcessors);
+  public static <T> List<T> parse(@Nonnull final String resource, @Nonnull final Class<T> classType,
+      @Nonnull final CellProcessor[] cellProcessors) throws IOException {
+    return parse(JFiles.fromResource(resource), classType, cellProcessors);
   }
 
   @Nonnull
-  public static <T> List<T> parse(final File csv, final Class<T> classType,
-      final CellProcessor[] cellProcessors) throws IOException {
+  public static <T> List<T> parse(@Nonnull final File csv, @Nonnull final Class<T> classType,
+      @Nonnull final CellProcessor[] cellProcessors) throws IOException {
     final List<T> list = new ArrayList<>();
     try (final FileReader reader = new FileReader(csv);
         final ICsvBeanReader beanReader =
             new CsvBeanReader(reader, CsvPreference.STANDARD_PREFERENCE)) {
       // the header elements are used to map the values to the bean (names must match)
       final String[] header = beanReader.getHeader(true);
+      final String[] nameMapping = new String[header.length];
+      for (int i = 0; i < header.length; i++) {
+        nameMapping[i] = Names.ofField(header[i]);
+      }
       T obj;
-      while ((obj = beanReader.read(classType, header, cellProcessors)) != null) {
+      while ((obj = beanReader.read(classType, nameMapping, cellProcessors)) != null) {
         list.add(obj);
       }
     }

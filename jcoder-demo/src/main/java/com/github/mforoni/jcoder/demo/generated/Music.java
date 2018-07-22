@@ -23,7 +23,7 @@ public class Music {
       new NotNull(new ParseDouble()), // beatsStart
       new NotNull(new ParseDouble()), // duration
       new NotNull(new ParseDouble()), // endOfFadeIn
-      new NotNull(new ParseDouble()), // familiarity
+      new Optional(new ParseDouble()), // familiarity
       new NotNull(new ParseDouble()), // key
       new NotNull(new ParseDouble()), // keyConfidence
       new NotNull(new ParseDouble()), // latitude
@@ -41,11 +41,11 @@ public class Music {
       new NotNull(new ParseDouble()), // tatumsConfidence
       new NotNull(new ParseDouble()), // tatumsStart
       new NotNull(new ParseDouble()), // tempo
-      new NotNull(), // terms
+      new Optional(), // terms
       new NotNull(new ParseDouble()), // termsFreq
       new NotNull(new ParseDouble()), // timeSignature
       new NotNull(new ParseDouble()), // timeSignatureConfidence
-      new NotNull(), // title
+      new Optional(), // title
       new NotNull(new ParseInt()), // year
   };
   private double artistHotttnesss;
@@ -59,7 +59,7 @@ public class Music {
   private double beatsStart;
   private double duration;
   private double endOfFadeIn;
-  private double familiarity;
+  private Double familiarity;
   private double key;
   private double keyConfidence;
   private double latitude;
@@ -174,11 +174,11 @@ public class Music {
     this.endOfFadeIn = endOfFadeIn;
   }
 
-  public double getFamiliarity() {
+  public Double getFamiliarity() {
     return familiarity;
   }
 
-  public void setFamiliarity(final double familiarity) {
+  public void setFamiliarity(final Double familiarity) {
     this.familiarity = familiarity;
   }
 

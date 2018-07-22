@@ -117,7 +117,8 @@ public final class JField {
     } else if (field.getType().equals(Boolean.class) || field.getType().equals(Boolean.TYPE)) {
       secondType = ParseBool.class;
     } else if (field.getType().equals(Date.class)) {
-      secondType = ParseDate.class;
+      return CodeBlock.builder()
+          .add("new $T(new $T(\"$N\"))", firstType, ParseDate.class, field.getFormat()).build();
     } else {
       throw new IllegalStateException("Case not handled for type " + field.getType());
     }
@@ -130,8 +131,14 @@ public final class JField {
   @Nonnull
   private final Class<?> type;
   private final boolean nullable;
+  private final String format;
 
   public JField(@Nonnull final String name, @Nonnull final Class<?> type, final boolean nullable) {
+    this(name, type, nullable, null);
+  }
+
+  public JField(@Nonnull final String name, @Nonnull final Class<?> type, final boolean nullable,
+      @Nullable final String format) {
     super();
     Preconditions.checkNotNull(name);
     Preconditions.checkNotNull(type);
@@ -144,6 +151,7 @@ public final class JField {
     this.name = name;
     this.type = type;
     this.nullable = nullable;
+    this.format = format;
   }
 
   @Nonnull
@@ -158,6 +166,10 @@ public final class JField {
 
   public boolean isNullable() {
     return nullable;
+  }
+
+  public String getFormat() {
+    return format;
   }
 
   public MethodSpec toGetter() {

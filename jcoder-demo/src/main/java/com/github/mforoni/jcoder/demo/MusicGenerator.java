@@ -17,13 +17,12 @@ final class MusicGenerator {
   private MusicGenerator() {}
 
   static void start() throws IOException {
-    // test music.csv: print header
     LOGGER.info("Detecting header of file {}", MUSIC_CSV);
-    final JHeader musicHeader =
-        MoreCsv.inferHeader(new CsvReader.Builder(MUSIC_CSV).rowLimit(50).build());
+    final JHeader musicHeader = MoreCsv.inferHeader(new CsvReader.Builder(MUSIC_CSV).build());
     musicHeader.print(LOGGER);
     final CodeGenerator codeGenerator = new CodeGenerator("Music", PACKAGE, musicHeader);
-    codeGenerator.writeBean(JFiles.SRC_MAIN_JAVA.toString());
+    codeGenerator.writeBean(JFiles.SRC_MAIN_JAVA);
+    LOGGER.info("File Music.java successfully written at {}", PACKAGE);
   }
 
   public static void main(final String[] args) {

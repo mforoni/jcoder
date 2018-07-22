@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import com.github.mforoni.jbasic.io.JFiles;
 import com.github.mforoni.jcoder.CodeGenerator;
 import com.github.mforoni.jcoder.JHeader;
-import com.github.mforoni.jcoder.util.CsvReader;
 import com.github.mforoni.jcoder.util.MoreCsv;
 
 /**
@@ -23,10 +22,10 @@ final class StudentGenerator {
 
   static void start() throws IOException {
     LOGGER.info("Detecting header of file {}", STUDENT_CSV);
-    final JHeader musicHeader = MoreCsv.inferHeader(new CsvReader(STUDENT_CSV));
+    final JHeader musicHeader = MoreCsv.inferHeader(STUDENT_CSV);
     musicHeader.print(LOGGER);
     final CodeGenerator codeGenerator = new CodeGenerator("Student", PACKAGE, musicHeader);
-    codeGenerator.writeBean(JFiles.SRC_MAIN_JAVA.toString());
+    codeGenerator.writeBean(JFiles.SRC_MAIN_JAVA);
     LOGGER.info("File Student.java successfully written at {}", PACKAGE);
   }
 

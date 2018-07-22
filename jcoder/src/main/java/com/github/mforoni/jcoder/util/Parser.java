@@ -3,7 +3,8 @@ package com.github.mforoni.jcoder.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.github.mforoni.jbasic.reflect.JTypes;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.github.mforoni.jcoder.JField;
 import com.github.mforoni.jcoder.JHeader;
 import com.github.mforoni.jcoder.JHeader.Origin;
@@ -24,40 +25,45 @@ final class Parser {
       this.filepath = filepath;
     }
 
-    private void addFields(final Object[] fields) {
-      if (this.fields.size() > 0) {
+    void header(final Object[] header) {
+      if (fields.size() > 0) {
         throw new IllegalStateException();
       }
-      for (int i = 0; i < fields.length; i++) {
-        final String str = String.valueOf(fields[i]);
-        this.fields.add(new MutableField(Names.ofField(str)));
+      int counter = 1;
+      for (final Object h : header) {
+        fields.add(new MutableField(toFieldName(h == null ? null : h.toString(), counter++)));
       }
     }
 
-    public void computeRow(final Object[] values, final int row) {
-      if (row == 0) {
-        addFields(values);
-      } else {
-        final int headerSize = fields.size();
-        if (values.length > headerSize) {
-          throw new IllegalStateException(String.format(
-              "Number of values (%d) not consistent with header in first line (%d) at line %d\nrow=%s",
-              values.length, headerSize, row, Arrays.asList(values)));
-        }
-        try {
-          for (int i = 0; i < values.length; i++) {
-            final MutableField field = fields.get(i);
-            if (values[i] != null) {
-              final Class<?> type = values[i].getClass();
-              field.setType(type);
-            } else {
-              field.setNullable(true);
-            }
+    private void header(final int size) {
+      for (int i = 1; i <= size; i++) {
+        fields.add(new MutableField(toFieldName(null, i)));
+      }
+    }
+
+    public void values(@Nonnull final Object[] values, final int row) {
+      final int headerSize = fields.size();
+      if (headerSize == 0) {
+        header(headerSize);
+      }
+      if (values.length > headerSize) {
+        throw new IllegalStateException(String.format(
+            "Number of values (%d) not consistent with header in first line (%d) at line %d\nrow=%s",
+            values.length, headerSize, row, Arrays.asList(values)));
+      }
+      try {
+        for (int i = 0; i < values.length; i++) {
+          final MutableField field = fields.get(i);
+          if (values[i] != null) {
+            final Class<?> type = values[i].getClass();
+            field.setType(type);
+          } else {
+            field.setNullable(true);
           }
-        } catch (final Throwable t) {
-          throw new IllegalStateException(
-              "Something unexpected at row " + row + ": " + Arrays.asList(values), t);
         }
+      } catch (final Throwable t) {
+        throw new IllegalStateException(
+            "Something unexpected at row " + row + ": " + Arrays.asList(values), t);
       }
     }
 
@@ -73,51 +79,53 @@ final class Parser {
     }
   }
   static class Strings {
-    private final List<MutableField> fields = new ArrayList<>();
+    private final List<MutableInferredField> fields = new ArrayList<>();
     private final String filepath;
 
     Strings(final String filepath) {
       this.filepath = filepath;
     }
 
-    private void addFields(final String[] fields) {
-      if (this.fields.size() > 0) {
+    void header(@Nonnull final String[] header) {
+      if (fields.size() > 0) {
         throw new IllegalStateException();
       }
       int counter = 1;
-      for (int i = 0; i < fields.length; i++) {
-        final String s =
-            com.google.common.base.Strings.isNullOrEmpty(fields[i]) ? "field" + counter++
-                : fields[i];
-        this.fields.add(new MutableField(Names.ofField(s)));
+      for (final String h : header) {
+        fields.add(new MutableInferredField(toFieldName(h, counter++)));
       }
     }
 
-    public void computeRow(final String[] values, final int row) {
-      if (row == 0) {
-        addFields(values);
-      } else {
-        final int headerSize = fields.size();
-        if (values.length != headerSize) {
-          throw new IllegalStateException(String.format(
-              "Number of values (%d) not consistent with header in first line (%d) at line %d\nrow=%s",
-              values.length, headerSize, row, Arrays.asList(values)));
-        }
-        try {
-          for (int i = 0; i < values.length; i++) {
-            final MutableField field = fields.get(i);
-            if (!com.google.common.base.Strings.isNullOrEmpty(values[i])) {
-              final Class<?> type = Helper.inferType(values[i]);
-              // LOGGER.debug("Value '{}' infered type {}", values[i], type);
-              field.inferCommonType(type);
-            } else {
-              field.setNullable(true);
-            }
+    private void header(final int size) {
+      for (int i = 1; i <= size; i++) {
+        fields.add(new MutableInferredField(toFieldName(null, i)));
+      }
+    }
+
+    void values(@Nonnull final String[] values, final int row) {
+      final int headerSize = fields.size();
+      if (headerSize == 0) {
+        header(headerSize);
+      }
+      if (values.length != headerSize) {
+        throw new IllegalStateException(String.format(
+            "Number of values (%d) not consistent with header in first line (%d) at line %d\nrow=%s",
+            values.length, headerSize, row, Arrays.asList(values)));
+      }
+      try {
+        for (int i = 0; i < values.length; i++) {
+          final MutableInferredField field = fields.get(i);
+          if (!com.google.common.base.Strings.isNullOrEmpty(values[i])) {
+            final InferredType newType = InferredType.inferType(values[i]);
+            final InferredType type = field.getInferredType();
+            field.setInferredType(InferredType.inferCommonType(type, newType));
+          } else {
+            field.setNullable(true);
           }
-        } catch (final Throwable t) {
-          throw new IllegalStateException(
-              "Something unexpected at row " + row + ": " + Arrays.asList(values), t);
         }
+      } catch (final Throwable t) {
+        throw new IllegalStateException(
+            "Something unexpected at row " + row + ": " + Arrays.asList(values), t);
       }
     }
 
@@ -126,58 +134,15 @@ final class Parser {
         throw new IllegalStateException();
       }
       final List<JField> fields = new ArrayList<>();
-      for (final MutableField mf : this.fields) {
-        fields.add(mf.toJField());
+      for (final MutableInferredField field : this.fields) {
+        fields.add(field.toJField());
       }
       return new JHeader(fields, Optional.of(new Origin(filepath, ParserType.STRINGS)));
     }
   }
-  private static class MutableField {
-    private final String name;
-    private Class<?> type;
-    private boolean nullable;
 
-    MutableField(final String name) {
-      this(name, null);
-    }
-
-    MutableField(final String name, final Class<?> type) {
-      this.name = name;
-      this.type = type;
-      nullable = false;
-    }
-
-    public void setNullable(final boolean value) {
-      nullable = value;
-    }
-
-    public void setType(final Class<?> type) {
-      if (this.type == null || this.type == type) {
-        this.type = type;
-      } else {
-        throw new IllegalStateException("Type can't change from " + this.type + " to " + type);
-      }
-    }
-
-    public void inferCommonType(final Class<?> newType) {
-      if (type == null) {
-        type = newType;
-      } else if (newType != null) {
-        type = Helper.inferCommonType(type, newType);
-      }
-    }
-
-    public JField toJField() {
-      if (type == null) {
-        type = String.class;
-      }
-      if (nullable && type.isPrimitive()) {
-        throw new IllegalStateException();
-      }
-      if (!nullable && JTypes.isPrimitiveOrPrimitiveWrapper(type)) {
-        type = JTypes.toPrimitive(type);
-      }
-      return new JField(name, type, nullable);
-    }
+  @Nonnull
+  private static String toFieldName(@Nullable final String s, final int counter) {
+    return com.google.common.base.Strings.isNullOrEmpty(s) ? "field" + counter : Names.ofField(s);
   }
 }

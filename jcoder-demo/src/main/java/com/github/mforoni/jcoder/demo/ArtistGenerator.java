@@ -24,7 +24,7 @@ final class ArtistGenerator {
       final JHeader musicHeader = MoreSpreadsheets.inferHeader(spreadsheet, SHEET_NAME);
       musicHeader.print(LOGGER);
       final CodeGenerator codeGenerator = new CodeGenerator("Artist", PACKAGE, musicHeader);
-      codeGenerator.writeBean(JFiles.SRC_MAIN_JAVA.toString());
+      codeGenerator.writeBean(JFiles.SRC_MAIN_JAVA);
       LOGGER.info("File Artist.java successfully written at {}", PACKAGE);
     }
   }

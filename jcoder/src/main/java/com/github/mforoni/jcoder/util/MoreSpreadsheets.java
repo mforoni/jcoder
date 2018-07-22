@@ -7,6 +7,7 @@ import com.github.mforoni.jcoder.JClass;
 import com.github.mforoni.jcoder.JHeader;
 import com.github.mforoni.jspreadsheet.Sheet;
 import com.github.mforoni.jspreadsheet.Spreadsheet;
+import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 
 /**
@@ -21,6 +22,7 @@ import com.google.common.base.Function;
  * @see Spreadsheet
  * @see Sheet
  */
+@Beta
 public final class MoreSpreadsheets {
   private MoreSpreadsheets() {
     throw new AssertionError();
@@ -28,11 +30,11 @@ public final class MoreSpreadsheets {
 
   public static JHeader inferHeader(final Spreadsheet spreadsheet, final String sheetName) {
     final Sheet sheet = spreadsheet.getSheet(sheetName);
-    return inferHeader(spreadsheet, sheet, sheet.getColumns());
+    return inferHeader(spreadsheet, sheet, sheet.getColumns(), true);
   }
 
   private static JHeader inferHeader(final Spreadsheet spreadsheet, final Sheet sheet,
-      final int columns) {
+      final int columns, final boolean header) {
     final Parser.Strings parser = new Parser.Strings(spreadsheet.getFile().getName());
     final int rows = sheet.getRows();
     for (int row = 0; row < rows; row++) {
@@ -40,26 +42,32 @@ public final class MoreSpreadsheets {
       for (int col = 0; col < columns; col++) {
         values[col] = sheet.getRawValue(row, col);
       }
-      // JLogger.info(values);
-      parser.computeRow(values, row);
+      if (header && row == 0) {
+        parser.header(values);
+      } else {
+        parser.values(values, row);
+      }
     }
     return parser.buildHeader();
   }
 
   public static JHeader buildHeader(final Spreadsheet spreadsheet, final String sheetName) {
     final Sheet sheet = spreadsheet.getSheet(sheetName);
-    return buildHeader(spreadsheet, sheet, sheet.getColumns());
+    return buildHeader(spreadsheet, sheet, sheet.getColumns(), true);
   }
 
   private static JHeader buildHeader(final Spreadsheet spreadsheet, final Sheet sheet,
-      final int columns) {
+      final int columns, final boolean header) {
     final Parser.Objects parser = new Parser.Objects(spreadsheet.getFile().getName());
     final int rows = sheet.getRows();
     final int cols = columns != -1 ? columns : sheet.getColumns();
     for (int row = 0; row < rows; row++) {
       final Object[] values = sheet.getRow(row, 0, cols);
-      // JLogger.info(values);
-      parser.computeRow(values, row);
+      if (header && row == 0) {
+        parser.header(values);
+      } else {
+        parser.values(values, row);
+      }
     }
     return parser.buildHeader();
   }

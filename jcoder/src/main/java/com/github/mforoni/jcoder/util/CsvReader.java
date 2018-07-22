@@ -16,7 +16,8 @@ import com.google.common.io.Files;
  * <ul>
  * <li>the CSV file</li>
  * <li>the separator character used in the CSV file</li>
- * <li>the row limit, i.e. the maxinum number of rows to read</li>
+ * <li>the header presence as a boolean value</li>
+ * <li>the row limit, i.e. the maximum number of rows to read</li>
  * </ul>
  * 
  * @author Foroni Marco
@@ -29,26 +30,20 @@ public class CsvReader {
   private final File csv;
   private final char separator;
   private final int rowLimit;
+  private final boolean header;
 
-  public CsvReader(@Nonnull final File csv, final char separator, final int rowLimit) {
+  public CsvReader(@Nonnull final File csv, final char separator, final boolean header,
+      final int rowLimit) {
     super();
     Preconditions.checkArgument(Files.getFileExtension(csv.getName()).equalsIgnoreCase("csv"));
     this.csv = csv;
     this.separator = separator;
+    this.header = header;
     this.rowLimit = rowLimit;
   }
 
-  public CsvReader(@Nonnull final String resource, final char separator, final int rowLimit)
-      throws FileNotFoundException {
-    this(JFiles.fromResource(resource), separator, rowLimit);
-  }
-
   public CsvReader(@Nonnull final File csv) {
-    this(csv, DEFAULT_SEPARATOR, NO_ROW_LIMIT);
-  }
-
-  public CsvReader(@Nonnull final String resource) throws FileNotFoundException {
-    this(resource, DEFAULT_SEPARATOR, NO_ROW_LIMIT);
+    this(csv, DEFAULT_SEPARATOR, true, NO_ROW_LIMIT);
   }
 
   @Nonnull
@@ -60,6 +55,10 @@ public class CsvReader {
     return separator;
   }
 
+  public boolean isHeader() {
+    return header;
+  }
+
   public int getRowLimit() {
     return rowLimit;
   }
@@ -67,11 +66,13 @@ public class CsvReader {
   public static class Builder {
     private final File csv;
     private char separator;
+    private boolean header;
     private int rowLimit;
 
     public Builder(final File csv) {
       this.csv = csv;
       this.separator = DEFAULT_SEPARATOR;
+      this.header = true;
       this.rowLimit = NO_ROW_LIMIT;
     }
 
@@ -79,24 +80,29 @@ public class CsvReader {
       this(JFiles.fromResource(resource));
     }
 
-    public Builder rowLimit(final int rowLimit) {
-      this.rowLimit = rowLimit;
-      return this;
-    }
-
     public Builder separator(final char separator) {
       this.separator = separator;
       return this;
     }
 
+    public Builder header(final boolean value) {
+      this.header = value;
+      return this;
+    }
+
+    public Builder rowLimit(final int rowLimit) {
+      this.rowLimit = rowLimit;
+      return this;
+    }
+
     public CsvReader build() {
-      return new CsvReader(csv, separator, rowLimit);
+      return new CsvReader(csv, separator, header, rowLimit);
     }
   }
 
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this).add("csv", csv).add("separator", separator)
-        .add("rowLimit", rowLimit).toString();
+        .add("header", header).add("rowLimit", rowLimit).toString();
   }
 }

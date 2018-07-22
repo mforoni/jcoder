@@ -49,11 +49,11 @@ public class Artist {
   private String timeSignatureConfidence;
   private String title;
   private String year;
-  private String field1;
-  private String field2;
-  private Double field3;
-  private String field4;
-  private Boolean field5;
+  private String field36;
+  private String field37;
+  private Double field38;
+  private String field39;
+  private Boolean field40;
 
   public Artist() {}
 
@@ -173,22 +173,22 @@ public class Artist {
           artist.setYear(obj);
           break;
         case 35:
-          artist.setField1(obj);
+          artist.setField36(obj);
           break;
         case 36:
-          artist.setField2(obj);
+          artist.setField37(obj);
           break;
         case 37:
           if (obj != null) {
-            artist.setField3(Double.valueOf(obj));
+            artist.setField38(Double.valueOf(obj));
           } ;
           break;
         case 38:
-          artist.setField4(obj);
+          artist.setField39(obj);
           break;
         case 39:
           if (obj != null) {
-            artist.setField5(Boolean.valueOf(obj));
+            artist.setField40(Boolean.valueOf(obj));
           } ;
           break;
       };
@@ -476,55 +476,55 @@ public class Artist {
     this.year = year;
   }
 
-  public String getField1() {
-    return field1;
+  public String getField36() {
+    return field36;
   }
 
-  public void setField1(final String field1) {
-    this.field1 = field1;
+  public void setField36(final String field36) {
+    this.field36 = field36;
   }
 
-  public String getField2() {
-    return field2;
+  public String getField37() {
+    return field37;
   }
 
-  public void setField2(final String field2) {
-    this.field2 = field2;
+  public void setField37(final String field37) {
+    this.field37 = field37;
   }
 
-  public Double getField3() {
-    return field3;
+  public Double getField38() {
+    return field38;
   }
 
-  public void setField3(final Double field3) {
-    this.field3 = field3;
+  public void setField38(final Double field38) {
+    this.field38 = field38;
   }
 
-  public String getField4() {
-    return field4;
+  public String getField39() {
+    return field39;
   }
 
-  public void setField4(final String field4) {
-    this.field4 = field4;
+  public void setField39(final String field39) {
+    this.field39 = field39;
   }
 
-  public Boolean isField5() {
-    return field5;
+  public Boolean isField40() {
+    return field40;
   }
 
-  public void setField5(final Boolean field5) {
-    this.field5 = field5;
+  public void setField40(final Boolean field40) {
+    this.field40 = field40;
   }
 
   @Override
   public String toString() {
     return String.format(
-        "Artist [artistHotttnesss=%s, artistId=%s, artistName=%s, artistMbtags=%s, artistMbtagsCount=%s, barsConfidence=%s, barsStart=%s, beatsConfidence=%s, beatsStart=%s, duration=%s, endOfFadeIn=%s, familiarity=%s, key=%s, keyConfidence=%s, latitude=%s, location=%s, longitude=%s, loudness=%s, mode=%s, modeConfidence=%s, releaseId=%s, releaseName=%s, similar=%s, songHotttnesss=%s, songId=%s, startOfFadeOut=%s, tatumsConfidence=%s, tatumsStart=%s, tempo=%s, terms=%s, termsFreq=%s, timeSignature=%s, timeSignatureConfidence=%s, title=%s, year=%s, field1=%s, field2=%s, field3=%s, field4=%s, field5=%s]",
+        "Artist [artistHotttnesss=%s, artistId=%s, artistName=%s, artistMbtags=%s, artistMbtagsCount=%s, barsConfidence=%s, barsStart=%s, beatsConfidence=%s, beatsStart=%s, duration=%s, endOfFadeIn=%s, familiarity=%s, key=%s, keyConfidence=%s, latitude=%s, location=%s, longitude=%s, loudness=%s, mode=%s, modeConfidence=%s, releaseId=%s, releaseName=%s, similar=%s, songHotttnesss=%s, songId=%s, startOfFadeOut=%s, tatumsConfidence=%s, tatumsStart=%s, tempo=%s, terms=%s, termsFreq=%s, timeSignature=%s, timeSignatureConfidence=%s, title=%s, year=%s, field36=%s, field37=%s, field38=%s, field39=%s, field40=%s]",
         artistHotttnesss, artistId, artistName, artistMbtags, artistMbtagsCount, barsConfidence,
         barsStart, beatsConfidence, beatsStart, duration, endOfFadeIn, familiarity, key,
         keyConfidence, latitude, location, longitude, loudness, mode, modeConfidence, releaseId,
         releaseName, similar, songHotttnesss, songId, startOfFadeOut, tatumsConfidence, tatumsStart,
-        tempo, terms, termsFreq, timeSignature, timeSignatureConfidence, title, year, field1,
-        field2, field3, field4, field5);
+        tempo, terms, termsFreq, timeSignature, timeSignatureConfidence, title, year, field36,
+        field37, field38, field39, field40);
   }
 }
