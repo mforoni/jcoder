@@ -1,5 +1,6 @@
 package com.github.mforoni.jcoder.demo.generated;
 
+import java.io.Serializable;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseBool;
 import org.supercsv.cellprocessor.ParseDouble;
@@ -10,7 +11,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 /**
  * Auto generated from file music.csv
  */
-public class Music {
+public class Music implements Serializable {
   public static final CellProcessor[] CELL_PROCESSOR = { //
       new NotNull(new ParseDouble()), // artistHotttnesss
       new NotNull(), // artistId

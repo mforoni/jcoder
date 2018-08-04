@@ -1,12 +1,13 @@
 package com.github.mforoni.jcoder.demo.generated;
 
+import java.io.Serializable;
 import javax.annotation.Nullable;
 import com.google.common.base.Function;
 
 /**
  * Auto generated from file artists.ods
  */
-public class Artist {
+public class Artist implements Serializable {
   public static final Function<String[], Artist> ROW_TO_ARTIST = new Function<String[], Artist>() {
     @Override
     @Nullable

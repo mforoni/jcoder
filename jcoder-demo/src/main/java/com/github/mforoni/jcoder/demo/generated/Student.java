@@ -1,5 +1,6 @@
 package com.github.mforoni.jcoder.demo.generated;
 
+import java.io.Serializable;
 import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -7,7 +8,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 /**
  * Auto generated from file student.csv
  */
-public class Student {
+public class Student implements Serializable {
   public static final CellProcessor[] CELL_PROCESSOR = { //
       new NotNull(new ParseInt()), // id
       new NotNull(), // firstName
