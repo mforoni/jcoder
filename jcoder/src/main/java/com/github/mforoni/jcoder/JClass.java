@@ -235,7 +235,7 @@ public final class JClass {
                     "%s.%s(%s.valueOf(%s))", varName, JMethods.setterName(field.getName()),
                     field.getType().getSimpleName(), varObj);
                 switchFlow.addCase(i, ifcond.build());
-              } else if (field.getType().equals(int.class)) {
+              } else if (field.getType().equals(boolean.class)) {
                 switchFlow.addCase(i, "%s.%s(Boolean.parseBoolean(%s))", varName,
                     JMethods.setterName(field.getName()), varObj);
               } else if (field.getType().equals(int.class)) {
