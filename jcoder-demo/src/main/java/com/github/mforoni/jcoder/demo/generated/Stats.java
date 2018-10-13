@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Function;
 
 /**
- * Auto generated from file Stats_2015-16.xlsx
+ * Auto generated from file Stats.xlsx
  */
 public class Stats implements Serializable {
   public static final Function<String[], Stats> ROW_TO_STATS = new Function<String[], Stats>() {

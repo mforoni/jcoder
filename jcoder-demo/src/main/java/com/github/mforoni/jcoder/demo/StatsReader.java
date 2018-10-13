@@ -12,8 +12,8 @@ import com.github.mforoni.jspreadsheet.Sheet;
 import com.github.mforoni.jspreadsheet.Spreadsheet;
 import com.github.mforoni.jspreadsheet.Spreadsheets;
 
-final class StatsXlsxReader {
-  private StatsXlsxReader() {}
+final class StatsReader {
+  private StatsReader() {}
 
   private static void start() throws IOException {
     try (final Spreadsheet spreadsheet = Spreadsheets.open(JFiles.fromResource(STATS_XLSX))) {

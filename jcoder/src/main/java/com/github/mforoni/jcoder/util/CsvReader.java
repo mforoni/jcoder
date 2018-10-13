@@ -8,7 +8,6 @@ import com.github.mforoni.jbasic.io.JFiles;
 import com.github.mforoni.jcoder.JHeader;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
-import com.google.common.io.Files;
 
 /**
  * Contains information for reading a CSV file or a pseudo CSV file where the separator character is
@@ -25,8 +24,8 @@ import com.google.common.io.Files;
  */
 @Immutable
 public class CsvReader {
-  private final static int NO_ROW_LIMIT = Integer.MAX_VALUE;
   public static final char DEFAULT_SEPARATOR = ',';
+  private static final int NO_ROW_LIMIT = Integer.MAX_VALUE;
   private final File csv;
   private final char separator;
   private final int rowLimit;
@@ -35,7 +34,7 @@ public class CsvReader {
   public CsvReader(@Nonnull final File csv, final char separator, final boolean header,
       final int rowLimit) {
     super();
-    Preconditions.checkArgument(Files.getFileExtension(csv.getName()).equalsIgnoreCase("csv"));
+    Preconditions.checkArgument(JFiles.isCsv(csv), "First argument must be an existing csv file");
     this.csv = csv;
     this.separator = separator;
     this.header = header;

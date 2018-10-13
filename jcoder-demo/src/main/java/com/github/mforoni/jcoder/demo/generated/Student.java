@@ -11,14 +11,14 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class Student implements Serializable {
   public static final CellProcessor[] CELL_PROCESSOR = { //
       new NotNull(new ParseInt()), // id
-      new NotNull(), // firstName
-      new NotNull(), // lastName
+      new NotNull(), // firstname
+      new NotNull(), // lastname
       new NotNull(), // gender
       new NotNull(new ParseInt()), // age
   };
   private int id;
-  private String firstName;
-  private String lastName;
+  private String firstname;
+  private String lastname;
   private String gender;
   private int age;
 
@@ -32,20 +32,20 @@ public class Student implements Serializable {
     this.id = id;
   }
 
-  public String getFirstName() {
-    return firstName;
+  public String getFirstname() {
+    return firstname;
   }
 
-  public void setFirstName(final String firstName) {
-    this.firstName = firstName;
+  public void setFirstname(final String firstname) {
+    this.firstname = firstname;
   }
 
-  public String getLastName() {
-    return lastName;
+  public String getLastname() {
+    return lastname;
   }
 
-  public void setLastName(final String lastName) {
-    this.lastName = lastName;
+  public void setLastname(final String lastname) {
+    this.lastname = lastname;
   }
 
   public String getGender() {
@@ -66,7 +66,7 @@ public class Student implements Serializable {
 
   @Override
   public String toString() {
-    return String.format("Student [id=%s, firstName=%s, lastName=%s, gender=%s, age=%s]", id,
-        firstName, lastName, gender, age);
+    return String.format("Student [id=%s, firstname=%s, lastname=%s, gender=%s, age=%s]", id,
+        firstname, lastname, gender, age);
   }
 }
