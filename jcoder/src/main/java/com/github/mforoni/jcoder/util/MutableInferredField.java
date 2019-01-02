@@ -19,6 +19,7 @@ class MutableInferredField {
     nullable = false;
   }
 
+  @Nullable
   public InferredType getInferredType() {
     return inferredType;
   }
@@ -32,19 +33,15 @@ class MutableInferredField {
   }
 
   public JField toJField() {
-    Class<?> type = inferredType.getType();
-    if (inferredType == null) {
-      type = String.class;
-    }
+    Class<?> type = inferredType == null ? String.class : inferredType.getType();
     if (nullable && type.isPrimitive()) {
       throw new IllegalStateException();
     }
     if (!nullable && JTypes.isPrimitiveOrPrimitiveWrapper(type)) {
       type = JTypes.toPrimitive(type);
     }
-    final String format = inferredType.getFormats() != null && inferredType.getFormats().size() > 0
-        ? inferredType.getFormats().get(0)
-        : null;
+    final String format = inferredType == null ? null
+        : inferredType.getFormats().size() > 0 ? inferredType.getFormats().get(0) : null;
     return new JField(name, type, nullable, format);
   }
 }

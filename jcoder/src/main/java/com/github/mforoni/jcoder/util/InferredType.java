@@ -1,6 +1,7 @@
 package com.github.mforoni.jcoder.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -23,21 +24,22 @@ class InferredType {
   private final Class<?> type;
   private final List<String> formats;
 
-  InferredType(@Nonnull final Class<?> type, @Nullable final List<String> formats) {
+  InferredType(@Nonnull final Class<?> type, @Nonnull final List<String> formats) {
     super();
     this.type = type;
     this.formats = formats;
   }
 
   public InferredType(@Nonnull final Class<?> type) {
-    this(type, null);
+    this(type, Collections.<String>emptyList());
   }
 
+  @Nonnull
   public Class<?> getType() {
     return type;
   }
 
-  @Nullable
+  @Nonnull
   public List<String> getFormats() {
     return formats;
   }
