@@ -62,7 +62,7 @@ public final class MoreSpreadsheets {
     final int rows = sheet.getRows();
     final int cols = columns != -1 ? columns : sheet.getColumns();
     for (int row = 0; row < rows; row++) {
-      final Object[] values = sheet.getRow(row, 0, cols);
+      final Object[] values = sheet.getRow(row, 0, cols - 1);
       if (header && row == 0) {
         parser.header(values);
       } else {
